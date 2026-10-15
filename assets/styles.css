@@ -1075,18 +1075,17 @@ img {
 .brand-card {
   background: #ffffff;
   border: 1px solid #e2e5eb;
-  padding: 26px 20px 22px;
+  padding: 24px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 185px;
+  min-height: 140px;
   transition: all var(--transition-fast);
   cursor: default;
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 .brand-card::before {
@@ -1112,7 +1111,7 @@ img {
 .brand-card:hover {
   background: #ffffff;
   border-color: #c91816;
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1), 0 0 20px rgba(201, 24, 22, 0.1);
 }
 
@@ -1126,63 +1125,31 @@ img {
 
 .brand-logo-wrap {
   width: 100%;
-  height: 75px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
-  padding: 6px 10px;
+  padding: 8px;
 }
 
 .brand-logo-img {
-  max-width: 85%;
+  max-width: 90%;
   max-height: 100%;
   object-fit: contain;
-  filter: grayscale(15%) contrast(1.15);
+  filter: contrast(1.15) brightness(0.98);
   transition: all 0.35s ease;
   image-rendering: -webkit-optimize-contrast;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 .brand-logo-circle {
   border-radius: 50%;
-  max-height: 65px;
+  max-height: 80px;
 }
 
 .brand-card:hover .brand-logo-img {
-  filter: grayscale(0%) contrast(1.1) drop-shadow(0 4px 12px rgba(201, 24, 22, 0.2));
-  transform: scale(1.08);
-}
-
-.brand-name-text {
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  letter-spacing: 0.08em;
-  color: #11141a;
-  text-transform: uppercase;
-  line-height: 1;
-  text-shadow: none;
-  transition: color var(--transition-fast), transform var(--transition-fast);
-}
-
-.brand-card:hover .brand-name-text {
-  color: #c91816;
-  transform: scale(1.03);
-}
-
-.brand-subtext {
-  font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #6b7280;
-  margin-top: 6px;
-  transition: color var(--transition-fast);
-}
-
-.brand-card:hover .brand-subtext {
-  color: #1f2937;
+  filter: contrast(1.2) drop-shadow(0 6px 14px rgba(201, 24, 22, 0.25));
+  transform: scale(1.1);
 }
 
 .brands-section p {
@@ -1886,57 +1853,348 @@ img {
   box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6);
 }
 
-/* ================= RESPONSIVE ================= */
+/* ================= COMPREHENSIVE RESPONSIVE DESIGN (MOBILE & TABLET OPTIMIZED) ================= */
 @media (max-width: 1100px) {
-  .pillars-grid, .brands-grid {
+  .pillars-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .brands-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
-    row-gap: 30px;
+    row-gap: 25px;
   }
   .footer-top-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 35px;
   }
 }
 
 @media (max-width: 868px) {
-  .hero-content-grid, .about-grid {
-    grid-template-columns: 1fr;
-  }
-  .hero-image-col {
-    order: -1;
-  }
-  .hero-image-frame {
-    max-width: 380px;
-  }
+  /* Header & Navigation */
   .desktop-nav {
     display: none;
   }
-  .bikes-grid, .services-grid {
+  .nav-container {
+    height: 72px;
+  }
+  .brand-logo {
+    height: 48px;
+    width: 48px;
+  }
+  .brand-title {
+    font-size: 1.3rem;
+  }
+  .header-actions .btn-secondary {
+    display: none;
+  }
+  .header-actions .btn-cta {
+    padding: 9px 16px;
+    font-size: 0.72rem;
+  }
+
+  /* Top Bar */
+  .top-bar-content {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 8px 15px;
+  }
+  .top-map-link span {
+    font-size: 0.72rem;
+  }
+  .top-bar-contact {
+    display: none;
+  }
+
+  /* Hero Banner Monumental */
+  .hero-section.hero-pbm-monumental {
+    min-height: 82vh;
+    padding: 20px 0 60px;
+  }
+  .pbm-row {
+    font-size: clamp(3.2rem, 15vw, 6rem);
+  }
+  .hero-layered-bike-stage {
+    max-width: 95%;
+    margin-bottom: -5px;
+  }
+  .hero-layered-bike-img {
+    max-height: 320px;
+  }
+  .hero-layered-content {
+    padding: 0 15px;
+    max-width: 100%;
+  }
+  .hero-layered-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .hero-controls {
+    bottom: 18px;
+  }
+  .indicator-dot {
+    width: 32px;
+  }
+  .indicator-dot.active {
+    width: 50px;
+  }
+
+  /* Quienes Somos */
+  .about-section {
+    padding: 70px 0;
+    background-attachment: scroll; /* Fix parallax lag on mobile */
+    background-position: center;
+  }
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .about-features-cards-grid {
     grid-template-columns: 1fr;
   }
+  .about-visual {
+    min-height: auto;
+  }
+  .about-main-img-box {
+    max-width: 100%;
+    padding: 30px 20px;
+  }
+
+  /* Brands Grid */
+  .brands-section {
+    padding: 70px 0;
+  }
+  .brands-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  .brand-card {
+    min-height: 160px;
+    padding: 20px 14px;
+  }
+  .brand-logo-wrap {
+    height: 60px;
+  }
+  .brand-name-text {
+    font-size: 1.4rem;
+  }
+
+  /* Inventario Seminuevas */
+  .inventory-section {
+    padding: 70px 0;
+  }
+  .bikes-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .filter-tabs {
+    justify-content: center;
+    gap: 8px;
+  }
+  .tab-btn {
+    padding: 8px 16px;
+    font-size: 0.72rem;
+  }
+
+  /* Financing Banner MAXIKASH */
   .financing-banner {
     flex-direction: column;
     text-align: center;
     padding: 35px 20px;
+    gap: 25px;
   }
-  .about-features-list {
+  .fin-perks-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .fin-cta-box {
+    width: 100%;
+  }
+  .btn-fin-large {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Services Grid */
+  .services-section {
+    padding: 70px 0;
+    background-attachment: scroll;
+    background-position: center;
+  }
+  .services-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Booking Card */
+  .booking-section {
+    padding: 60px 0;
+  }
+  .booking-card {
+    grid-template-columns: 1fr;
+    padding: 35px 22px;
+    gap: 28px;
+    text-align: center;
+  }
+  .booking-desc {
+    margin: 0 auto 20px;
+  }
+  .booking-features {
+    justify-content: center;
+  }
+  .btn-booking-hero {
+    padding: 16px 28px;
+    font-size: 0.88rem;
+  }
+
+  /* Footer */
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
   }
 }
 
 @media (max-width: 550px) {
-  .pillars-grid, .brands-grid, .stats-grid, .footer-top-grid {
-    grid-template-columns: 1fr;
+  /* Global Spacing */
+  .container {
+    padding: 0 16px;
   }
-  .hero-actions {
+  .section-title {
+    font-size: 2.2rem !important;
+  }
+  .section-tag {
+    font-size: 0.7rem;
+  }
+  .section-header {
+    margin-bottom: 35px;
+  }
+
+  /* Buttons */
+  .hero-actions, .about-cta-row {
     flex-direction: column;
     width: 100%;
+    gap: 12px;
   }
   .btn-cta, .btn-secondary {
     width: 100%;
     justify-content: center;
+    padding: 13px 20px;
+    font-size: 0.78rem;
+  }
+
+  /* Monumental Hero */
+  .hero-section.hero-pbm-monumental {
+    min-height: 78vh;
+    padding: 15px 0 50px;
+  }
+  .hero-layered-bike-img {
+    max-height: 240px;
+  }
+  .pbm-row {
+    font-size: 3rem;
+  }
+  .hero-badge span {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Stats Bar */
+  .stats-bar {
+    padding: 30px 0;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .stat-item {
+    padding-left: 14px;
+  }
+  .stat-number {
+    font-size: 2.2rem;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+  }
+  .stat-desc {
+    font-size: 0.7rem;
+  }
+
+  /* 4 Pillars */
+  .pillars-section {
+    padding: 60px 0;
+  }
+  .pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .pillar-img-box {
+    height: 190px;
+  }
+  .pillar-content {
+    padding: 22px 18px;
+  }
+
+  /* Brands Grid */
+  .brands-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .brand-card {
+    min-height: 145px;
+    padding: 18px 10px;
+  }
+  .brand-logo-wrap {
+    height: 50px;
+    margin-bottom: 8px;
+  }
+  .brand-name-text {
+    font-size: 1.25rem;
+  }
+  .brand-subtext {
+    font-size: 0.58rem;
+  }
+
+  /* Bike Cards */
+  .bike-media {
+    height: 210px;
+  }
+  .bike-title {
+    font-size: 1.35rem;
+  }
+  .bike-info {
+    padding: 18px;
+  }
+  .bike-specs-row {
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.75rem;
+  }
+
+  /* Experience Badge */
+  .about-experience-card {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Floating WhatsApp */
+  .whatsapp-float {
+    bottom: 20px;
+    right: 20px;
+    width: 52px;
+    height: 52px;
   }
 }
 
