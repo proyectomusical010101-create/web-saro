@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initHeroSlider();
   initStatsCounter();
+  initDynamicInventory();
   initInventoryTabs();
   initSmoothScroll();
   initTiltEffect();
@@ -120,11 +121,69 @@ function initStatsCounter() {
   if (statsSection) observer.observe(statsSection);
 }
 
-/* ================= 3. INVENTORY TABS ================= */
+/* ================= 3. DYNAMIC INVENTORY & TABS ================= */
+function renderBikesList(category = 'all') {
+  const container = document.querySelector('.bikes-grid');
+  if (!container || !window.InventoryManager) return;
+
+  const bikes = window.InventoryManager.getInventory();
+  if (!bikes || !bikes.length) return;
+
+  container.innerHTML = bikes.map(bike => {
+    const isSold = bike.status === 'vendida';
+    const matchesCategory = category === 'all' || bike.category === category;
+    const displayStyle = matchesCategory ? 'block' : 'none';
+    const waText = encodeURIComponent(bike.whatsappText || `Hola, me interesa la ${bike.title}`);
+
+    return `
+      <article class="bike-card ${isSold ? 'bike-sold' : ''}" data-category="${bike.category || 'naked'}" style="display: ${displayStyle}; opacity: ${matchesCategory ? '1' : '0'};">
+        <div class="bike-media">
+          ${isSold ? 
+            `<span class="bike-status-tag" style="background:#ef4444; color:#fff;">VENDIDA</span>` : 
+            (bike.badge ? `<span class="bike-status-tag financed">${bike.badge}</span>` : '')
+          }
+          <img src="${bike.image || 'assets/images/1.png'}" alt="${bike.title}">
+        </div>
+        <div class="bike-info">
+          <div class="bike-meta">${bike.meta || 'SEMINUEVA'}</div>
+          <h3 class="bike-title">${bike.title}</h3>
+          <div class="bike-specs-row">
+            <div>KM: <span class="bike-spec-val">${bike.km || 'N/A'}</span></div>
+            <div>AÑO: <span class="bike-spec-val">${bike.year || 'N/A'}</span></div>
+            <div>MOTOR: <span class="bike-spec-val">${bike.engine || 'N/A'}</span></div>
+          </div>
+          <div class="bike-footer">
+            <div class="financing-note">
+              <strong>${bike.financeTitle || 'Financiada con MAXIKASH'}</strong>
+              ${bike.financeSubtitle || 'Pagos cómodos disponibles'}
+            </div>
+            ${isSold ? 
+              `<span class="btn-cta" style="padding: 10px 18px; font-size: 0.75rem; background: #4b5563; border-color: #4b5563; cursor: not-allowed; pointer-events: none;">VENDIDA</span>` : 
+              `<a href="https://wa.me/5210000000000?text=${waText}" target="_blank" class="btn-cta" style="padding: 10px 18px; font-size: 0.75rem;">CONSULTAR</a>`
+            }
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  // Re-inicializar inclinación 3D en las tarjetas renderizadas
+  initTiltEffect();
+}
+
+function initDynamicInventory() {
+  renderBikesList('all');
+
+  // Escuchar evento de actualización del panel administrativo en vivo
+  window.addEventListener('saro_inventory_changed', () => {
+    const activeTab = document.querySelector('.tab-btn.active');
+    const cat = activeTab ? activeTab.getAttribute('data-filter') : 'all';
+    renderBikesList(cat);
+  });
+}
+
 function initInventoryTabs() {
   const tabBtns = document.querySelectorAll('.tab-btn');
-  const bikeCards = document.querySelectorAll('.bike-card');
-
   if (!tabBtns.length) return;
 
   tabBtns.forEach(btn => {
@@ -133,6 +192,7 @@ function initInventoryTabs() {
       btn.classList.add('active');
 
       const category = btn.getAttribute('data-filter');
+      const bikeCards = document.querySelectorAll('.bike-card');
 
       bikeCards.forEach(card => {
         if (category === 'all' || card.getAttribute('data-category') === category) {
@@ -140,13 +200,13 @@ function initInventoryTabs() {
           setTimeout(() => {
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
-          }, 50);
+          }, 30);
         } else {
           card.style.opacity = '0';
           card.style.transform = 'translateY(15px)';
           setTimeout(() => {
             card.style.display = 'none';
-          }, 250);
+          }, 200);
         }
       });
     });

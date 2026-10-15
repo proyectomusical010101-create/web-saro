@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Inventario | Saro Motors & Services</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/images/logo.jpeg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0a0b0e;
+      --bg-surface: #12141a;
+      --bg-card: #181a22;
+      --bg-card-hover: #1f222d;
+      --border: #262936;
+      --border-focus: #e62b28;
+      --red: #e62b28;
+      --red-hover: #c91816;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Montserrat', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ================= LOGIN SCREEN ================= */
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 11, 14, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(230, 43, 40, 0.15);
+      position: relative;
+    }
+
+    .login-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 18px;
+      border: 2px solid var(--red);
+      box-shadow: 0 0 25px rgba(230, 43, 40, 0.4);
+    }
+
+    .login-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .login-subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 26px;
+    }
+
+    .pin-input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .pin-input-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .pin-field {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 1.4rem;
+      color: #fff;
+      text-align: center;
+      letter-spacing: 0.3em;
+      font-family: var(--font-mono);
+      transition: all 0.2s;
+    }
+
+    .pin-field:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(230, 43, 40, 0.25);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: var(--font-body);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--red-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(230, 43, 40, 0.4);
+    }
+
+    .login-hint {
+      margin-top: 15px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* ================= MAIN NAVBAR ================= */
+    .admin-nav {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .nav-brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--red);
+    }
+
+    .nav-brand-text h1 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+
+    .nav-brand-text span {
+      font-size: 0.72rem;
+      color: var(--red);
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-nav:hover {
+      border-color: #fff;
+      background: var(--bg-card-hover);
+    }
+
+    .btn-nav-primary {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .btn-nav-primary:hover {
+      background: var(--red-hover);
+      border-color: var(--red-hover);
+    }
+
+    /* ================= DASHBOARD LAYOUT ================= */
+    .admin-container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px 24px;
+      flex-grow: 1;
+    }
+
+    /* Stats Grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--border);
+    }
+
+    .stat-card.red::before { background: var(--red); }
+    .stat-card.green::before { background: var(--green); }
+    .stat-card.amber::before { background: var(--amber); }
+
+    .stat-card-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stat-card-value {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      line-height: 1;
+      color: #fff;
+    }
+
+    /* Action Bar */
+    .toolbar-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-grow: 1;
+      max-width: 600px;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px 10px 38px;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--red);
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+    }
+
+    .select-filter {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-add-bike {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 11px 22px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(230, 43, 40, 0.35);
+    }
+
+    .btn-add-bike:hover {
+      background: var(--red-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(230, 43, 40, 0.5);
+    }
+
+    /* Inventory Grid */
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .admin-bike-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s;
+      position: relative;
+    }
+
+    .admin-bike-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .admin-bike-card.is-sold {
+      opacity: 0.65;
+      filter: grayscale(0.5);
+    }
+
+    .card-thumb-wrap {
+      height: 190px;
+      background: #0d0f14;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-thumb-img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,0.8));
+      transition: transform 0.3s;
+    }
+
+    .admin-bike-card:hover .card-thumb-img {
+      transform: scale(1.05);
+    }
+
+    .card-badges-float {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .badge-pill {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .badge-financed {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .badge-status {
+      align-self: flex-start;
+    }
+
+    .badge-status.disponible {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .badge-status.vendida {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-cat-meta {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--red);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .card-bike-title {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .card-specs-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 14px;
+    }
+
+    .spec-item {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+    }
+
+    .spec-item strong {
+      display: block;
+      color: var(--text);
+      font-size: 0.78rem;
+      margin-top: 2px;
+      font-weight: 700;
+    }
+
+    .card-finance-info {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .card-finance-info strong {
+      color: #fff;
+      display: block;
+    }
+
+    .card-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 9px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: var(--bg-card-hover);
+      border-color: #fff;
+    }
+
+    .btn-action-edit {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
+      color: #60a5fa;
+    }
+
+    .btn-action-edit:hover {
+      background: rgba(59, 130, 246, 0.3);
+      border-color: #60a5fa;
+    }
+
+    .btn-action-delete {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      flex: 0 0 40px;
+    }
+
+    .btn-action-delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: #ef4444;
+    }
+
+    /* ================= MODAL FORM ================= */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--bg-surface);
+      z-index: 10;
+    }
+
+    .modal-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      letter-spacing: 0.06em;
+      color: #fff;
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+    }
+
+    .btn-close-modal:hover {
+      color: #fff;
+      background: var(--bg-card);
+    }
+
+    .modal-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--red);
+    }
+
+    /* Image Drop / Picker */
+    .image-picker-box {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      background: var(--bg-card);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .image-picker-box:hover {
+      border-color: var(--red);
+      background: var(--bg-card-hover);
+    }
+
+    .image-preview {
+      max-height: 140px;
+      max-width: 100%;
+      object-fit: contain;
+      display: none;
+      margin: 10px auto 0;
+      border-radius: 6px;
+    }
+
+    .image-preview.has-image {
+      display: block;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      background: var(--bg-surface);
+      position: sticky;
+      bottom: 0;
+    }
+
+    /* ================= TOAST NOTIFICATION ================= */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--green);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 99999;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--bg-surface);
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+    }
+
+    .empty-state h3 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .toolbar-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .toolbar-left {
+        max-width: 100%;
+        flex-direction: column;
+      }
+      .toolbar-right {
+        width: 100%;
+      }
+      .btn-add-bike {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= AUTH OVERLAY (PIN CHECK) ================= -->
+  <div id="authOverlay">
+    <div class="login-box">
+      <img src="assets/images/logo.jpeg" alt="Saro Motors" class="login-logo">
+      <h2 class="login-title">PANEL DE CONTROL</h2>
+      <p class="login-subtitle">SARO MOTORS & SERVICES • GESTIÓN DE INVENTARIO</p>
+      
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="pin-input-group">
+          <label for="pinCode">Ingresa el PIN de Acceso</label>
+          <input type="password" id="pinCode" class="pin-field" maxlength="8" placeholder="••••" autofocus required>
+        </div>
+        <button type="submit" class="btn-login">ACCEDER AL PANEL</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MAIN HEADER NAVBAR ================= -->
+  <header class="admin-nav">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/images/logo.jpeg" alt="Saro Motors" class="nav-brand-logo">
+      <div class="nav-brand-text">
+        <h1>SARO MOTORS</h1>
+        <span>PANEL DE INVENTARIO</span>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <a href="index.html#seminuevas" target="_blank" class="btn-nav">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Ver Web en Vivo
+      </a>
+      <button class="btn-nav" onclick="exportData()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar Respaldo
+      </button>
+      <button class="btn-nav" onclick="resetToFactory()" style="color: #f87171;" title="Restablecer inventario original">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Restablecer
+      </button>
+      <button class="btn-nav btn-nav-primary" onclick="handleLogout()">
+        Salir
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= DASHBOARD CONTENT ================= -->
+  <main class="admin-container">
+    
+    <!-- Stats Row -->
+    <section class="stats-row">
+      <div class="stat-card red">
+        <div class="stat-card-title">Total de Motos</div>
+        <div class="stat-card-value" id="statTotal">0</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-card-title">Disponibles a la Venta</div>
+        <div class="stat-card-value" id="statDisponibles">0</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-card-title">Motos Vendidas</div>
+        <div class="stat-card-value" id="statVendidas">0</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-card-title">Con Crédito MAXIKASH</div>
+        <div class="stat-card-value" id="statFinanciables">0</div>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <section class="toolbar-bar">
+      <div class="toolbar-left">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Buscar por modelo, marca o motor..." oninput="filterBikes()">
+        </div>
+
+        <select id="categoryFilter" class="select-filter" onchange="filterBikes()">
+          <option value="all">Todas las Categorías</option>
+          <option value="naked">Naked / Sport</option>
+          <option value="adventure">Trail / Adventure</option>
+          <option value="urban">Urbanas / Trabajo</option>
+          <option value="custom">Custom / Clásicas</option>
+        </select>
+
+        <select id="statusFilter" class="select-filter" onchange="filterBikes()">
+          <option value="all">Todos los Estados</option>
+          <option value="disponible">Solo Disponibles</option>
+          <option value="vendida">Solo Vendidas</option>
+        </select>
+      </div>
+
+      <div class="toolbar-right">
+        <button class="btn-add-bike" onclick="openAddModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nueva Moto
+        </button>
+      </div>
+    </section>
+
+    <!-- Bikes Grid -->
+    <section class="inventory-grid" id="inventoryGrid">
+      <!-- Generado dinámicamente -->
+    </section>
+
+  </main>
+
+  <!-- ================= MODAL DE EDICIÓN / AGREGAR MOTO ================= -->
+  <div class="modal-backdrop" id="bikeModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modalTitle">AGREGAR NUEVA MOTO</h2>
+        <button class="btn-close-modal" onclick="closeModal()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="bikeForm" onsubmit="saveBikeForm(event)">
+        <div class="modal-body">
+          <input type="hidden" id="bikeId">
+
+          <!-- Foto de la Moto -->
+          <div class="form-group">
+            <label>Foto de la Motocicleta</label>
+            <div class="image-picker-box" onclick="document.getElementById('fileInput').click()">
+              <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="margin: 0 auto 8px; color: var(--red);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <div style="font-size: 0.85rem; font-weight: 700;">Haz clic para subir una foto desde tu equipo</div>
+              <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px;">PNG con fondo transparente o JPG/WEBP de alta calidad</div>
+              <img id="imagePreview" src="" alt="Vista previa" class="image-preview">
+            </div>
+            <div style="margin-top: 8px;">
+              <input type="text" id="imageUrl" class="form-control" placeholder="O pega la ruta/URL de la imagen (ej: assets/images/1.png)" oninput="updatePreviewFromUrl()">
+            </div>
+          </div>
+
+          <!-- Título y Categoría -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bikeTitle">Modelo / Nombre de la Moto *</label>
+              <input type="text" id="bikeTitle" class="form-control" placeholder="Ej: VENTO HYPER SPORT 300" required>
+            </div>
+            <div class="form-group">
+              <label for="bikeCategory">Categoría *</label>
+              <select id="bikeCategory" class="form-control" required>
+                <option value="naked">Naked / Sport</option>
+                <option value="adventure">Trail / Adventure</option>
+                <option value="urban">Urbana / Trabajo</option>
+                <option value="custom">Custom / Clásica</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Subtítulo Meta -->
+          <div class="form-group">
+            <label for="bikeMeta">Etiqueta Superior (Cilindrada / Tipo)</label>
+            <input type="text" id="bikeMeta" class="form-control" placeholder="Ej: 300 CC • SEMINUEVA">
+          </div>
+
+          <!-- Especificaciones Técnicas: KM, Año, Motor -->
+          <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+            <div class="form-group">
+              <label for="bikeKm">Kilometraje *</label>
+              <input type="text" id="bikeKm" class="form-control" placeholder="Ej: 1,850 km" required>
+            </div>
+            <div class="form-group">
+              <label for="bikeYear">Año *</label>
+              <input type="text" id="bikeYear" class="form-control" placeholder="Ej: 2024" required>
+            </div>
+            <div class="form-group">
+              <label for="bikeEngine">Tipo de Motor *</label>
+              <input type="text" id="bikeEngine" class="form-control" placeholder="Ej: 4T Monocilíndrico" required>
+            </div>
+          </div>
+
+          <!-- Financiamiento y Estado -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bikeBadge">Badge Superior</label>
+              <input type="text" id="bikeBadge" class="form-control" value="MAXIKASH FINANCIABLE" placeholder="Ej: MAXIKASH FINANCIABLE">
+            </div>
+            <div class="form-group">
+              <label for="bikeStatus">Estado de Disponibilidad</label>
+              <select id="bikeStatus" class="form-control">
+                <option value="disponible">🟢 DISPONIBLE A LA VENTA</option>
+                <option value="vendida">🔴 VENDIDA / NO DISPONIBLE</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Notas de Financiamiento -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bikeFinanceTitle">Nota de Financiamiento (Línea 1)</label>
+              <input type="text" id="bikeFinanceTitle" class="form-control" value="Financiada con MAXIKASH" placeholder="Ej: Financiada con MAXIKASH">
+            </div>
+            <div class="form-group">
+              <label for="bikeFinanceSubtitle">Condición (Línea 2)</label>
+              <input type="text" id="bikeFinanceSubtitle" class="form-control" value="Pagos semanales disponibles" placeholder="Ej: Enganche mínimo">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-nav" onclick="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-nav btn-nav-primary">Guardar Moto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Operación realizada con éxito</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/inventory.js"></script>
+  <script>
+    // PIN de Acceso (Predeterminado 1234)
+    const AUTH_KEY = 'saro_admin_authenticated';
+    let currentImageBase64 = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      renderDashboard();
+    });
+
+    // ================= AUTENTICACIÓN =================
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem(AUTH_KEY);
+      const overlay = document.getElementById('authOverlay');
+      if (isAuth === 'true') {
+        overlay.style.display = 'none';
+      } else {
+        overlay.style.display = 'flex';
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const pin = document.getElementById('pinCode').value;
+      if (pin === '1234' || pin === '1921' || pin === 'saro') {
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('authOverlay').style.display = 'none';
+        showToast('¡Bienvenido al Panel de Control!');
+      } else {
+        alert('PIN incorrecto. Acceso denegado.');
+      }
+    }
+
+    function handleLogout() {
+      if (confirm('¿Deseas cerrar sesión en el panel?')) {
+        sessionStorage.removeItem(AUTH_KEY);
+        location.reload();
+      }
+    }
+
+    // ================= RENDERIZAR TABLERO =================
+    function renderDashboard(bikesToRender = null) {
+      const bikes = bikesToRender || InventoryManager.getInventory();
+      const grid = document.getElementById('inventoryGrid');
+      
+      // Actualizar Métricas
+      const allBikes = InventoryManager.getInventory();
+      document.getElementById('statTotal').innerText = allBikes.length;
+      document.getElementById('statDisponibles').innerText = allBikes.filter(b => b.status !== 'vendida').length;
+      document.getElementById('statVendidas').innerText = allBikes.filter(b => b.status === 'vendida').length;
+      document.getElementById('statFinanciables').innerText = allBikes.filter(b => b.badge && b.badge.includes('MAXIKASH')).length;
+
+      if (!bikes.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <h3>NO SE ENCONTRARON MOTOS</h3>
+            <p>No hay motocicletas que coincidan con los filtros actuales o el inventario está vacío.</p>
+            <button class="btn-add-bike" onclick="openAddModal()">+ Agregar Primera Moto</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = bikes.map(bike => {
+        const isSold = bike.status === 'vendida';
+        return `
+          <article class="admin-bike-card ${isSold ? 'is-sold' : ''}">
+            <div class="card-thumb-wrap">
+              <div class="card-badges-float">
+                ${bike.badge ? `<span class="badge-pill badge-financed">${bike.badge}</span>` : ''}
+                <span class="badge-pill badge-status ${bike.status || 'disponible'}">
+                  ${isSold ? 'VENDIDA' : 'DISPONIBLE'}
+                </span>
+              </div>
+              <img src="${bike.image || 'assets/images/1.png'}" alt="${bike.title}" class="card-thumb-img">
+            </div>
+
+            <div class="card-body">
+              <div class="card-cat-meta">${bike.meta || 'SEMINUEVA'}</div>
+              <h3 class="card-bike-title">${bike.title}</h3>
+
+              <div class="card-specs-list">
+                <div class="spec-item">KM <strong>${bike.km || 'N/A'}</strong></div>
+                <div class="spec-item">AÑO <strong>${bike.year || 'N/A'}</strong></div>
+                <div class="spec-item">MOTOR <strong>${bike.engine || 'N/A'}</strong></div>
+              </div>
+
+              <div class="card-finance-info">
+                <strong>${bike.financeTitle || 'Financiamiento disponible'}</strong>
+                <span>${bike.financeSubtitle || 'Consulta requisitos'}</span>
+              </div>
+
+              <div class="card-actions-row">
+                <button class="btn-action btn-action-edit" onclick="openEditModal('${bike.id}')">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Editar
+                </button>
+                <button class="btn-action" onclick="toggleBikeStatus('${bike.id}')" title="Marcar disponible o vendida">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  ${isSold ? 'Reactivar' : 'Vender'}
+                </button>
+                <button class="btn-action btn-action-delete" onclick="deleteBikePrompt('${bike.id}')" title="Eliminar moto">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // ================= FILTROS Y BÚSQUEDA =================
+    function filterBikes() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cat = document.getElementById('categoryFilter').value;
+      const status = document.getElementById('statusFilter').value;
+
+      const list = InventoryManager.getInventory().filter(b => {
+        const matchesQuery = !q || 
+          b.title.toLowerCase().includes(q) || 
+          (b.engine && b.engine.toLowerCase().includes(q)) ||
+          (b.meta && b.meta.toLowerCase().includes(q));
+
+        const matchesCat = cat === 'all' || b.category === cat;
+        const matchesStatus = status === 'all' || (b.status || 'disponible') === status;
+
+        return matchesQuery && matchesCat && matchesStatus;
+      });
+
+      renderDashboard(list);
+    }
+
+    // ================= MANEJO DE IMÁGENES =================
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        currentImageBase64 = evt.target.result;
+        const preview = document.getElementById('imagePreview');
+        preview.src = currentImageBase64;
+        preview.classList.add('has-image');
+        document.getElementById('imageUrl').value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updatePreviewFromUrl() {
+      const url = document.getElementById('imageUrl').value.trim();
+      const preview = document.getElementById('imagePreview');
+      if (url) {
+        currentImageBase64 = url;
+        preview.src = url;
+        preview.classList.add('has-image');
+      } else {
+        currentImageBase64 = '';
+        preview.classList.remove('has-image');
+      }
+    }
+
+    // ================= MODAL AGREGAR / EDITAR =================
+    function openAddModal() {
+      document.getElementById('modalTitle').innerText = 'AGREGAR NUEVA MOTO';
+      document.getElementById('bikeForm').reset();
+      document.getElementById('bikeId').value = '';
+      currentImageBase64 = '';
+      
+      const preview = document.getElementById('imagePreview');
+      preview.src = '';
+      preview.classList.remove('has-image');
+
+      document.getElementById('bikeBadge').value = 'MAXIKASH FINANCIABLE';
+      document.getElementById('bikeFinanceTitle').value = 'Financiada con MAXIKASH';
+      document.getElementById('bikeFinanceSubtitle').value = 'Pagos semanales disponibles';
+      document.getElementById('bikeStatus').value = 'disponible';
+
+      document.getElementById('bikeModal').classList.add('open');
+    }
+
+    function openEditModal(id) {
+      const list = InventoryManager.getInventory();
+      const bike = list.find(b => b.id === id);
+      if (!bike) return;
+
+      document.getElementById('modalTitle').innerText = 'EDITAR MOTO: ' + bike.title;
+      document.getElementById('bikeId').value = bike.id;
+      document.getElementById('bikeTitle').value = bike.title || '';
+      document.getElementById('bikeCategory').value = bike.category || 'naked';
+      document.getElementById('bikeMeta').value = bike.meta || '';
+      document.getElementById('bikeKm').value = bike.km || '';
+      document.getElementById('bikeYear').value = bike.year || '';
+      document.getElementById('bikeEngine').value = bike.engine || '';
+      document.getElementById('bikeBadge').value = bike.badge || '';
+      document.getElementById('bikeStatus').value = bike.status || 'disponible';
+      document.getElementById('bikeFinanceTitle').value = bike.financeTitle || '';
+      document.getElementById('bikeFinanceSubtitle').value = bike.financeSubtitle || '';
+
+      const preview = document.getElementById('imagePreview');
+      if (bike.image) {
+        currentImageBase64 = bike.image;
+        preview.src = bike.image;
+        preview.classList.add('has-image');
+        document.getElementById('imageUrl').value = bike.image.startsWith('data:') ? '' : bike.image;
+      } else {
+        currentImageBase64 = '';
+        preview.classList.remove('has-image');
+        document.getElementById('imageUrl').value = '';
+      }
+
+      document.getElementById('bikeModal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('bikeModal').classList.remove('open');
+    }
+
+    function saveBikeForm(e) {
+      e.preventDefault();
+      const id = document.getElementById('bikeId').value;
+      const title = document.getElementById('bikeTitle').value.trim();
+      const category = document.getElementById('bikeCategory').value;
+      const meta = document.getElementById('bikeMeta').value.trim();
+      const km = document.getElementById('bikeKm').value.trim();
+      const year = document.getElementById('bikeYear').value.trim();
+      const engine = document.getElementById('bikeEngine').value.trim();
+      const badge = document.getElementById('bikeBadge').value.trim();
+      const status = document.getElementById('bikeStatus').value;
+      const financeTitle = document.getElementById('bikeFinanceTitle').value.trim();
+      const financeSubtitle = document.getElementById('bikeFinanceSubtitle').value.trim();
+
+      const bikeData = {
+        title,
+        category,
+        meta: meta || `${category.toUpperCase()} • SEMINUEVA`,
+        km,
+        year,
+        engine,
+        badge,
+        status,
+        financeTitle: financeTitle || 'Financiada con MAXIKASH',
+        financeSubtitle: financeSubtitle || 'Pagos cómodos',
+        image: currentImageBase64 || 'assets/images/1.png',
+        whatsappText: `Hola, me interesa la ${title}`
+      };
+
+      if (id) {
+        // Actualizar existente
+        InventoryManager.updateBike(id, bikeData);
+        showToast('Moto actualizada correctamente');
+      } else {
+        // Nueva moto
+        InventoryManager.addBike(bikeData);
+        showToast('¡Nueva moto agregada al catálogo!');
+      }
+
+      closeModal();
+      renderDashboard();
+    }
+
+    function toggleBikeStatus(id) {
+      const bike = InventoryManager.toggleStatus(id);
+      if (bike) {
+        showToast(`Estado actualizado: ${bike.status.toUpperCase()}`);
+        renderDashboard();
+      }
+    }
+
+    function deleteBikePrompt(id) {
+      if (confirm('¿Estás seguro de que deseas eliminar esta moto del inventario?')) {
+        InventoryManager.deleteBike(id);
+        showToast('Moto eliminada del inventario');
+        renderDashboard();
+      }
+    }
+
+    function resetToFactory() {
+      if (confirm('¿Deseas restablecer el inventario al catálogo original de 5 motos? Se perderán las modificaciones personalizadas.')) {
+        InventoryManager.resetToDefaults();
+        showToast('Inventario restablecido a valores de fábrica');
+        renderDashboard();
+      }
+    }
+
+    function exportData() {
+      const json = InventoryManager.exportJSON();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `saro-motors-inventario-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Copia de respaldo descargada');
+    }
+
+    // ================= TOAST =================
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
