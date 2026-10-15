@@ -1034,15 +1034,28 @@
   </div>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/inventory.js"></script>
   <script>
-    // PIN de Acceso (Predeterminado 1234)
+    // PIN de Acceso
     const AUTH_KEY = 'saro_admin_authenticated';
     let currentImageBase64 = '';
+    let selectedFileObject = null;
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       checkAuth();
       renderDashboard();
+      if (window.InventoryManager && window.InventoryManager.fetchCloudInventory) {
+        try {
+          await window.InventoryManager.fetchCloudInventory();
+          renderDashboard();
+          window.InventoryManager.subscribeRealtime(() => {
+            renderDashboard();
+          });
+        } catch (e) {
+          console.warn('Error cloud sync:', e);
+        }
+      }
     });
 
     // ================= AUTENTICACIÓN =================
@@ -1171,6 +1184,7 @@
     function handleFileSelect(e) {
       const file = e.target.files[0];
       if (!file) return;
+      selectedFileObject = file;
 
       const reader = new FileReader();
       reader.onload = function(evt) {
@@ -1187,6 +1201,7 @@
       const url = document.getElementById('imageUrl').value.trim();
       const preview = document.getElementById('imagePreview');
       if (url) {
+        selectedFileObject = null;
         currentImageBase64 = url;
         preview.src = url;
         preview.classList.add('has-image');
@@ -1202,6 +1217,7 @@
       document.getElementById('bikeForm').reset();
       document.getElementById('bikeId').value = '';
       currentImageBase64 = '';
+      selectedFileObject = null;
       
       const preview = document.getElementById('imagePreview');
       preview.src = '';
@@ -1220,6 +1236,7 @@
       const bike = list.find(b => b.id === id);
       if (!bike) return;
 
+      selectedFileObject = null;
       document.getElementById('modalTitle').innerText = 'EDITAR MOTO: ' + bike.title;
       document.getElementById('bikeId').value = bike.id;
       document.getElementById('bikeTitle').value = bike.title || '';
@@ -1252,7 +1269,7 @@
       document.getElementById('bikeModal').classList.remove('open');
     }
 
-    function saveBikeForm(e) {
+    async function saveBikeForm(e) {
       e.preventDefault();
       const id = document.getElementById('bikeId').value;
       const title = document.getElementById('bikeTitle').value.trim();
@@ -1266,6 +1283,16 @@
       const financeTitle = document.getElementById('bikeFinanceTitle').value.trim();
       const financeSubtitle = document.getElementById('bikeFinanceSubtitle').value.trim();
 
+      // Subir archivo a Supabase Storage si se seleccionó uno nuevo
+      let finalImg = currentImageBase64 || 'assets/images/1.png';
+      if (selectedFileObject) {
+        showToast('Subiendo foto a la nube...');
+        const cloudUrl = await InventoryManager.uploadImage(selectedFileObject);
+        if (cloudUrl) {
+          finalImg = cloudUrl;
+        }
+      }
+
       const bikeData = {
         title,
         category,
@@ -1277,17 +1304,15 @@
         status,
         financeTitle: financeTitle || 'Financiada con MAXIKASH',
         financeSubtitle: financeSubtitle || 'Pagos cómodos',
-        image: currentImageBase64 || 'assets/images/1.png',
+        image: finalImg,
         whatsappText: `Hola, me interesa la ${title}`
       };
 
       if (id) {
-        // Actualizar existente
-        InventoryManager.updateBike(id, bikeData);
+        await InventoryManager.updateBike(id, bikeData);
         showToast('Moto actualizada correctamente');
       } else {
-        // Nueva moto
-        InventoryManager.addBike(bikeData);
+        await InventoryManager.addBike(bikeData);
         showToast('¡Nueva moto agregada al catálogo!');
       }
 
@@ -1295,25 +1320,25 @@
       renderDashboard();
     }
 
-    function toggleBikeStatus(id) {
-      const bike = InventoryManager.toggleStatus(id);
+    async function toggleBikeStatus(id) {
+      const bike = await InventoryManager.toggleStatus(id);
       if (bike) {
         showToast(`Estado actualizado: ${bike.status.toUpperCase()}`);
         renderDashboard();
       }
     }
 
-    function deleteBikePrompt(id) {
+    async function deleteBikePrompt(id) {
       if (confirm('¿Estás seguro de que deseas eliminar esta moto del inventario?')) {
-        InventoryManager.deleteBike(id);
+        await InventoryManager.deleteBike(id);
         showToast('Moto eliminada del inventario');
         renderDashboard();
       }
     }
 
-    function resetToFactory() {
+    async function resetToFactory() {
       if (confirm('¿Deseas restablecer el inventario al catálogo original de 5 motos? Se perderán las modificaciones personalizadas.')) {
-        InventoryManager.resetToDefaults();
+        await InventoryManager.resetToDefaults();
         showToast('Inventario restablecido a valores de fábrica');
         renderDashboard();
       }

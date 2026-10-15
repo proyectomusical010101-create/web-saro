@@ -171,7 +171,7 @@ function renderBikesList(category = 'all') {
   initTiltEffect();
 }
 
-function initDynamicInventory() {
+async function initDynamicInventory() {
   renderBikesList('all');
 
   // Escuchar evento de actualización del panel administrativo en vivo
@@ -180,6 +180,25 @@ function initDynamicInventory() {
     const cat = activeTab ? activeTab.getAttribute('data-filter') : 'all';
     renderBikesList(cat);
   });
+
+  // Cargar inventario desde la base de datos Supabase en la nube
+  if (window.InventoryManager && window.InventoryManager.fetchCloudInventory) {
+    try {
+      await window.InventoryManager.fetchCloudInventory();
+      const activeTab = document.querySelector('.tab-btn.active');
+      const cat = activeTab ? activeTab.getAttribute('data-filter') : 'all';
+      renderBikesList(cat);
+
+      // Suscripción en tiempo real
+      window.InventoryManager.subscribeRealtime(() => {
+        const currentTab = document.querySelector('.tab-btn.active');
+        const currentCat = currentTab ? currentTab.getAttribute('data-filter') : 'all';
+        renderBikesList(currentCat);
+      });
+    } catch (e) {
+      console.warn('Cloud inventory fetch fallback:', e);
+    }
+  }
 }
 
 function initInventoryTabs() {
