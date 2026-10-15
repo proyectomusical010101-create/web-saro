@@ -1068,24 +1068,24 @@ img {
 
 .brands-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 26px;
 }
 
 .brand-card {
   background: #ffffff;
   border: 1px solid #e2e5eb;
-  padding: 24px;
+  padding: 24px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 140px;
+  min-height: 195px;
   transition: all var(--transition-fast);
   cursor: default;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-  border-radius: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
 }
 
 .brand-card::before {
@@ -1111,8 +1111,8 @@ img {
 .brand-card:hover {
   background: #ffffff;
   border-color: #c91816;
-  transform: translateY(-6px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1), 0 0 20px rgba(201, 24, 22, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12), 0 0 25px rgba(201, 24, 22, 0.12);
 }
 
 .brand-card:hover::before {
@@ -1125,7 +1125,7 @@ img {
 
 .brand-logo-wrap {
   width: 100%;
-  height: 90px;
+  height: 145px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1133,23 +1133,23 @@ img {
 }
 
 .brand-logo-img {
-  max-width: 90%;
+  max-width: 96%;
   max-height: 100%;
   object-fit: contain;
   filter: contrast(1.15) brightness(0.98);
   transition: all 0.35s ease;
   image-rendering: -webkit-optimize-contrast;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .brand-logo-circle {
   border-radius: 50%;
-  max-height: 80px;
+  max-height: 130px;
 }
 
 .brand-card:hover .brand-logo-img {
-  filter: contrast(1.2) drop-shadow(0 6px 14px rgba(201, 24, 22, 0.25));
-  transform: scale(1.1);
+  filter: contrast(1.2) drop-shadow(0 8px 18px rgba(201, 24, 22, 0.28));
+  transform: scale(1.08);
 }
 
 .brands-section p {
@@ -1965,21 +1965,27 @@ img {
 
   /* Brands Grid */
   .brands-section {
-    padding: 70px 0;
+    padding: 75px 0;
   }
   .brands-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 18px;
   }
   .brand-card {
-    min-height: 160px;
-    padding: 20px 14px;
+    min-height: 165px;
+    padding: 22px 16px;
+    border-radius: 10px;
   }
   .brand-logo-wrap {
-    height: 60px;
+    height: 115px;
+    padding: 4px;
   }
-  .brand-name-text {
-    font-size: 1.4rem;
+  .brand-logo-img {
+    max-width: 96%;
+    max-height: 100%;
+  }
+  .brand-logo-circle {
+    max-height: 105px;
   }
 
   /* Inventario Seminuevas */
@@ -2146,21 +2152,24 @@ img {
   /* Brands Grid */
   .brands-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 14px;
   }
   .brand-card {
-    min-height: 145px;
-    padding: 18px 10px;
+    min-height: 155px;
+    padding: 16px 10px;
+    border-radius: 8px;
   }
   .brand-logo-wrap {
-    height: 50px;
-    margin-bottom: 8px;
+    height: 105px;
+    margin-bottom: 0;
+    padding: 4px;
   }
-  .brand-name-text {
-    font-size: 1.25rem;
+  .brand-logo-img {
+    max-width: 98%;
+    max-height: 100%;
   }
-  .brand-subtext {
-    font-size: 0.58rem;
+  .brand-logo-circle {
+    max-height: 90px;
   }
 
   /* Bike Cards */
